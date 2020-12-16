@@ -9,13 +9,13 @@ class HelpCommands(commands.Cog):
         self.bot = bot
 
     @commands.command()
-    async def help(self,ctx):
+    async def help(self,ctx, arg=None):
 
         descriptionFormat = """ **Information commands** : ``info`` ``points`` ``map``
                                 **Utilities commands** : ``osuset`` ``bounty`` ``score``
 
                                 Do ``.help [command name]`` to get more information!
-                                
+
                             """
         embed = discord.Embed(description = descriptionFormat, color = discord.Color(0xFF748C))
         embed.set_author(name = "osu!bountea commands list!", icon_url = self.bot.user.avatar_url)

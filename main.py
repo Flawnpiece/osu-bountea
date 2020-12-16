@@ -1,7 +1,12 @@
 from config import discordToken, osuKey
 import discord
 from discord.ext import commands
+from osuapi import OsuApi, ReqConnector
+import requests
 import os
+
+connector = connector=ReqConnector()
+osuapi = OsuApi(osuKey,connector=ReqConnector())
 
 description = '''ex'''
 
