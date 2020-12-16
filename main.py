@@ -1,7 +1,7 @@
 from config import discordToken, osuKey
 import discord
 from discord.ext import commands
-import osuapi
+import os
 
 description = '''ex'''
 
@@ -16,26 +16,21 @@ async def on_ready():
     print('Logged in as')
     print(bot.user.name)
     print(bot.user.id)
-    print('------')
 
 @bot.command()
 async def ping(ctx):
     await ctx.send("Pong!")
 
 @bot.command()
-async def help(ctx):
+async def reload(ctx, name=None):
+    if name:
+        bot.reload_extension(f'commands.{name}')
+    else:
+        pass
 
-    descriptionFormat = """ **Information commands** : ``info`` ``points`` ``map``
-                            **Utilities commands** : ``osuset`` ``bounty`` ``score``
-
-                            Do ``.help [command name]`` to get more information!
-
-                        """
-    embed = discord.Embed(description = descriptionFormat, color = discord.Color(0xFF748C))
-    embed.set_author(name = "osu!bountea commands list!", icon_url = bot.user.avatar_url)
-    embed.set_footer(text="Bot made by your local trackpad player")
-    await ctx.send(embed=embed)
-
+for filename in os.listdir('./commands'):
+    if filename.endswith('.py'):
+        bot.load_extension(f'commands.{filename[:-3]}')
 
 
 bot.run(discordToken)
