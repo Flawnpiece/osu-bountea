@@ -4,6 +4,10 @@ from discord.ext import commands
 from osuapi import OsuApi, ReqConnector
 import requests
 import os
+import sqlite3
+
+connection = sqlite3.connect('data/players.db')
+cursor = connection.cursor()
 
 connector = connector=ReqConnector()
 osuapi = OsuApi(osuKey,connector=ReqConnector())
@@ -39,3 +43,5 @@ for filename in os.listdir('./commands'):
 
 
 bot.run(discordToken)
+
+connection.close()
