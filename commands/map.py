@@ -39,7 +39,7 @@ class MapInfo(commands.Cog):
         return "{}:{}".format(min,sec)
 
 
-    @commands.command(aliases=["maps"])
+    @commands.command(aliases=["Map","maps"], description="Showcase all the information you need to know about the current bounty!", usage=".map")
     async def map(self,ctx):
 
         descriptionFormat = """ ✦ **{0} - {1}**

@@ -16,8 +16,6 @@ class BountyVerification(commands.Cog):
     def idVerification(self,ctx):
         userID = ctx.author.id
 
-        connection = sqlite3.connect('data/players.db')
-        cursor = connection.cursor()
         cursor.execute("SELECT * FROM osuset WHERE discord_id=?", (userID,))
 
         databaseSection = cursor.fetchone()
@@ -29,7 +27,7 @@ class BountyVerification(commands.Cog):
         else:
             return 0
 
-    @commands.command(aliases=["bounties", "bountea"])
+    @commands.command(aliases=["Bounty","bounties", "bountea"], description="Verify your lastest play as the bounty and check for the points earned", usage=".bounty {username}")
     async def bounty(self, ctx, playerName=None):
 
         if not playerName:
