@@ -46,7 +46,7 @@ class HelpCommands(commands.Cog):
                                     **Utilities commands** : ``osuset`` ``bounty`` ``score``
 
                                     Do ``.help [command name]`` to get more information!
-
+                                    
                                 """
             embed = discord.Embed(description = descriptionFormat, color = discord.Color(0xFF748C))
             embed.set_author(name = "osu!bountea commands list!", icon_url = self.bot.user.avatar_url)
