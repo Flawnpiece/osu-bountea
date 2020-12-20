@@ -71,7 +71,7 @@ class BountyVerification(commands.Cog):
                 await ctx.send("Player not found!")
                 return
             if osuUser == 2:
-                await ctx.send("Use the .osuset command bukako!")
+                await ctx.send("Use the .osuset {username} before using .bounty or do .bounty {username}")
                 return
 
         res = osuapi.get_user_recent(osuUser,limit=1)
