@@ -48,12 +48,12 @@ class MapInfo(commands.Cog):
     @commands.command(aliases=["Map","maps"], description="Showcase all the information you need to know about the current bounty!", usage=".map")
     async def map(self,ctx):
 
-        formattingElements = {"artist":"**" + beatmap.artist + "**", "title":"**"+ beatmap.title+"**", "diffname":beatmap.version, "sr":round(beatmap.difficultyrating,2),
+        formattingElements = {"artist":beatmap.artist, "title":beatmap.title, "diffname":beatmap.version, "sr":round(beatmap.difficultyrating,2),
         "length":self.lengthFormat(beatmap.total_length), "bpm":beatmap.bpm, "maxcombo":beatmap.max_combo, "ar":beatmap.diff_approach,
         "od":beatmap.diff_overall, "hp":beatmap.diff_drain, "cs":beatmap.diff_size, "diffemote":self.diffEmote(beatmap.difficultyrating),
         "mapper":beatmap.creator,"mapsetID":beatmap.beatmapset_id,"mapID":beatmap.beatmap_id, "space1":" \u200B", "space2":"\u200B \u200B \u200B \u200B \u200B"}
 
-        descriptionFormat = (f" ✦ [{formattingElements['artist']} **-** {formattingElements['title']}](https://osu.ppy.sh/beatmapsets/{formattingElements['mapsetID']}#osu/{formattingElements['mapID']})\n"
+        descriptionFormat = (f" ✦ [**{formattingElements['artist']} - {formattingElements['title']}**](https://osu.ppy.sh/beatmapsets/{formattingElements['mapsetID']}#osu/{formattingElements['mapID']})\n"
                             f"{formattingElements['space2']} [**| by {formattingElements['mapper']}**](https://osu.ppy.sh/beatmapsets/{formattingElements['mapsetID']}#osu/{formattingElements['mapID']}) \n\n"
 
                             f"{formattingElements['diffemote']}{formattingElements['space1']} - {formattingElements['diffname']}\n"
