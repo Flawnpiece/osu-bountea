@@ -2,10 +2,11 @@ import discord
 from discord.ext import commands
 from main import osuapi
 
-
-res = osuapi.get_beatmaps(beatmap_id=1315116)
+res = osuapi.get_beatmaps(beatmap_id=2542475)
 beatmap = res[0]
 
+'''for x,y in dict(res[0]).items():
+    print(x,y)'''
 
 def setup(bot):
     bot.add_cog(MapInfo(bot))
@@ -18,17 +19,17 @@ class MapInfo(commands.Cog):
     def diffEmote(self,starRating):
         self.sr = starRating
         if self.sr < 2:
-            return "Easy"
+            return "<:easy:790701940022837278>"
         elif self.sr < 2.70:
-            return "Normal"
+            return "<:normal:790702199528488960>"
         elif self.sr < 4.00:
-            return "Hard"
+            return "<:hard:790702230075605032>"
         elif self.sr < 5.30:
-            return "Insane"
+            return "<:insane:790702257083252736>"
         elif self.sr < 6.50:
-            return "Expert"
+            return "<:expert:790702286799896586>"
         elif self.sr >= 6.5:
-            return "Expert+"
+            return "<:expertplus:790702321545904148>"
         return self.sr
 
     def lengthFormat(self, length):
@@ -38,25 +39,33 @@ class MapInfo(commands.Cog):
 
         return "{}:{}".format(min,sec)
 
+    def statusOnDate(self,status,date):
+        approvedStatus = {4:"Loved", 3:"Qualified", 2:"Approved", 1 : "Ranked", 0 : "Pending", -1 : "WIP", -2 :" Graveyard"}
+        status = approvedStatus[status.value]
+
+        return "{} on {}".format(status, date.date())
 
     @commands.command(aliases=["Map","maps"], description="Showcase all the information you need to know about the current bounty!", usage=".map")
     async def map(self,ctx):
 
-        descriptionFormat = """ ✦ **{0} - {1}**
+        formattingElements = {"artist":"**" + beatmap.artist + "**", "title":"**"+ beatmap.title+"**", "diffname":beatmap.version, "sr":round(beatmap.difficultyrating,2),
+        "length":self.lengthFormat(beatmap.total_length), "bpm":beatmap.bpm, "maxcombo":beatmap.max_combo, "ar":beatmap.diff_approach,
+        "od":beatmap.diff_overall, "hp":beatmap.diff_drain, "cs":beatmap.diff_size, "diffemote":self.diffEmote(beatmap.difficultyrating),
+        "mapper":beatmap.creator,"mapsetID":beatmap.beatmapset_id,"mapID":beatmap.beatmap_id, "space1":" \u200B", "space2":"\u200B \u200B \u200B \u200B \u200B"}
 
-                                {11} - {2}
-                                ▸ **Difficulty:** {3} ▸ **Length:** {4}
-                                ▸ **BPM:** {5} ▸ **Max combo:** {6}
+        descriptionFormat = (f" ✦ [{formattingElements['artist']} **-** {formattingElements['title']}](https://osu.ppy.sh/beatmapsets/{formattingElements['mapsetID']}#osu/{formattingElements['mapID']})\n"
+                            f"{formattingElements['space2']} [**| by {formattingElements['mapper']}**](https://osu.ppy.sh/beatmapsets/{formattingElements['mapsetID']}#osu/{formattingElements['mapID']}) \n\n"
 
-                                ▸ **AR:** {7} **OD:** {8} **HP:** {9} **CS:** {10}
-                            """
+                            f"{formattingElements['diffemote']}{formattingElements['space1']} - {formattingElements['diffname']}\n"
+                            f"▸ **Difficulty:** {formattingElements['sr']}"
+                            f"▸ **Length:** {formattingElements['length']}\n"
+                            f"▸ **BPM:** {formattingElements['bpm']}"
+                            f"▸ **Max combo:** {formattingElements['maxcombo']}\n\n"
 
-        formattingElements = (beatmap.artist, beatmap.title, beatmap.version, round(beatmap.difficultyrating,2),
-                              self.lengthFormat(beatmap.total_length), beatmap.bpm, beatmap.max_combo, beatmap.diff_approach,
-                              beatmap.diff_overall, beatmap.diff_drain, beatmap.diff_size, self.diffEmote(beatmap.difficultyrating))
+                            f"▸ **AR:** {formattingElements['ar']} **OD:** {formattingElements['od']} **HP:** {formattingElements['hp']} **CS:** {formattingElements['cs']}")
 
-        embed = discord.Embed(description = descriptionFormat.format(*formattingElements), color = discord.Color(0xFF748C))
+        embed = discord.Embed(description = descriptionFormat, color = discord.Color(0xFF748C))
         embed.set_thumbnail(url = beatmap.cover_thumbnail)
-        embed.set_author(name = "map information!", icon_url = self.bot.user.avatar_url)
-        embed.set_footer(text="Bot made by your local trackpad player")
+        embed.set_author(name = "Bounty map information!", icon_url = self.bot.user.avatar_url)
+        embed.set_footer(text=" {0} | {1} ♡".format(self.statusOnDate(beatmap.approved,beatmap.approved_date),beatmap.favourite_count) )
         await ctx.send(embed=embed)

@@ -34,6 +34,7 @@ async def ping(ctx):
 async def reload(ctx, name=None):
     if name:
         bot.reload_extension(f'commands.{name}')
+        await ctx.send("command reloaded!")
     else:
         pass
 
