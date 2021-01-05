@@ -31,7 +31,7 @@ class BountyVerification(commands.Cog):
         else:
             return returnVar
 
-    def recentEmbed(self,ctx,res):
+    def recentEmbed(self,res):
         beatmap = osuapi.get_beatmaps(beatmap_id=res[0].beatmap_id)
         osuUser = osuapi.get_user(username=res[0].user_id)
 
