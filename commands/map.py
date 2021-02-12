@@ -66,6 +66,10 @@ class MapInfo(commands.Cog):
 
         embed = discord.Embed(description = descriptionFormat, color = discord.Color(0xFF748C))
         embed.set_thumbnail(url = beatmap.cover_thumbnail)
+        embed.add_field(name=f"{formattingElements['space1']}", value=f"▸ **Difficulty:** {formattingElements['sr']}", inline=True)
+        embed.add_field(name=f"{formattingElements['space1']}", value=f"▸ **Length:** {formattingElements['length']}", inline=False)
+        embed.add_field(name=f"{formattingElements['space1']}", value=f"▸ **BPM** {formattingElements['bpm']}", inline=True)
+        embed.add_field(name=f"{formattingElements['space1']}", value=f"▸ **Max combo:** {formattingElements['maxcombo']}", inline=True)
         embed.set_author(name = "Bounty map information!", icon_url = self.bot.user.avatar_url)
         embed.set_footer(text=" {0} | {1} ♡".format(self.statusOnDate(beatmap.approved,beatmap.approved_date),beatmap.favourite_count) )
         await ctx.send(embed=embed)

@@ -4,7 +4,6 @@ from main import osuapi, connection,cursor
 import sqlite3
 
 
-
 def setup(bot):
     bot.add_cog(BountyVerification(bot))
 
@@ -35,14 +34,21 @@ class BountyVerification(commands.Cog):
         beatmap = osuapi.get_beatmaps(beatmap_id=res[0].beatmap_id)
         osuUser = osuapi.get_user(username=res[0].user_id)
 
-        descriptionFormat = """ ✦ **{0} - {1}** | {2}
+        print(res[0].accuracy("mode"))
+        formattingElements = {"artist":beatmap[0].artist, "title":beatmap[0].title, "mapsetID":beatmap[0].beatmapset_id, "mapID":beatmap[0].beatmap_id,"mods":res[0].enabled_mods,
+                              "rank":res[0].rank, "pp":"pp soon", "accuracy":res[0].accuracy("OsuMode"),"mapper":beatmap[0].creator,
+                              "300":res[0].count300, "100":res[0].count100, "50":res[0].count50, "miss":res[0].countmiss,
+                              "playercombo":res[0].maxcombo, "mapcombo":beatmap[0].max_combo ,"spac)e1":" \u200B", "space2":"\u200B \u200B \u200B \u200B \u200B"}
 
-                                ▸ {3} | {4} | acc[{5}/{6}/{7}/{8}]
-                                ▸ {9}/{10}
-                            """
-        formattingElements = (beatmap[0].artist, beatmap[0].title, res[0].enabled_mods, res[0].rank,
-                             "pp soon", res[0].count300, res[0].count100, res[0].count50,res[0].countmiss,
-                             res[0].maxcombo, beatmap[0].max_combo)
+        descriptionFormat = (f" ✦ [**{formattingElements['artist']} - {formattingElements['title']}**](https://osu.ppy.sh/beatmapsets/{formattingElements['mapsetID']}#osu/{formattingElements['mapID']})\n"
+                            f"{formattingElements['space2']} [**| by {formattingElements['mapper']}**](https://osu.ppy.sh/beatmapsets/{formattingElements['mapsetID']}#osu/{formattingElements['mapID']}) \n\n"
+
+                            f"|{formattingElements['mods']}\n"
+                            f"▸ {formattingElements['rank']} | {formattingElements['pp']}"
+                            f"▸ {formattingElements['accuracy']} | [{formattingElements['300']}/{formattingElements['100']}/"
+                            f"▸ {formattingElements['50']}/{formattingElements['miss']}]"
+                            f"▸ {formattingElements['playercombo']}/{formattingElements['mapcombo']}\n\n")
+
 
         embed = discord.Embed(description = descriptionFormat.format(*formattingElements), color = discord.Color(0xFF748C))
         embed.set_thumbnail(url = beatmap[0].cover_thumbnail)
@@ -79,7 +85,7 @@ class BountyVerification(commands.Cog):
             await ctx.send("No map found in your recent play")
             return
 
-        embed = self.recentEmbed(ctx,res)
+        embed = self.recentEmbed(res)
         await ctx.send(embed=embed)
 
         await ctx.send("it's not the bounty map dumdum")
